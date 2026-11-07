@@ -1,8 +1,7 @@
 from typing import TypedDict
 
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_litellm import ChatLiteLLM
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
 # from agent.llm_clients.lc_chatopenai_patch import ChatOpenAI
 # for older langchain versions
@@ -30,6 +29,17 @@ def get_llm_chain(model_name: str = None) -> BaseChatModel:
     if model_name is None:
         model_name = get_secret("CORE_LLM_MODEL_NAME")
 
+    # Direct OpenAI adapter avoids LiteLLM's unrelated optional MCP imports for
+    # native function calls. Keep other providers on the original adapter.
+    if model_name and model_name.startswith("openai/"):
+        return ChatOpenAI(
+            model=model_name.removeprefix("openai/"),
+            api_key=get_secret("OPENAI_API_KEY"),
+            base_url=get_secret("CORE_LLM_API_BASE") or "https://api.openai.com/v1",
+            max_completion_tokens=int(get_secret("CORE_LLM_MAX_TOKENS") or "500"),
+            reasoning_effort="none", temperature=None, max_retries=0, timeout=60,
+        )
+
     # proxies moved to .env, just configure this vars
     # proxy = get_secret("proxy")
     # if proxy and proxy != "NONE":
@@ -52,6 +62,7 @@ def get_llm_chain(model_name: str = None) -> BaseChatModel:
 
     # print("[lc_clients.py DEBUG] LLM Model full creds =", creds)
 
+    from langchain_litellm import ChatLiteLLM
     return ChatLiteLLM(**creds)
 
 

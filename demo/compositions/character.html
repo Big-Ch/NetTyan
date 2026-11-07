@@ -1,0 +1,20 @@
+<template><style>
+@font-face{font-family:KadrArial;src:url('assets/Arial.ttf')}
+*{box-sizing:border-box}#root{position:absolute;inset:0;background:#f7faf7;color:#14251b;font-family:KadrArial,sans-serif}
+.content{position:absolute;left:192px;top:150px;width:1536px}
+h1{font-size:68px;line-height:1.12;letter-spacing:-2px;margin:0 0 38px}
+.question{font-size:36px;line-height:1.3;margin:0 0 35px;color:#42584a;max-width:1470px}
+.cm-pop{transform-origin:left bottom;background:#ddfb62;padding:32px 42px;border-radius:22px}
+.reply{font-size:47px;line-height:1.28;margin:0}
+.receipt{font-size:29px;line-height:1.3;margin:25px 0 0;color:#42584a}
+</style><div data-hf-id="hf-ymiy" id="root" data-composition-id="character" data-width="1920" data-height="1080">
+<div data-hf-id="hf-s8lu" class="content" data-hold><h1 data-hf-id="hf-nrp3">Починил велосипед. Есть история.</h1><p data-hf-id="hf-y822" class="question">Привет! Я починил старый велосипед, хотя раньше не умел. Кто ты?</p>
+<div data-hf-id="hf-jvtf" id="reply" class="clip" data-start="2" data-duration="17.07" data-track-index="2"><div data-hf-id="hf-ctrm" class="cm-pop"><p data-hf-id="hf-4o3s" class="reply">Привет! Я Кадр — ИИ-персонаж и полевой репортёр цифровой мастерской: собираю небольшие истории о том, что люди делают своими руками. Починить велосипед с нуля — уже звучит как хорошая история. Что оказалось самой трудной частью?</p></div></div>
+<p data-hf-id="hf-9gtm" id="receipt" class="clip receipt" data-start="2" data-duration="17.07" data-track-index="3">Настоящий ответ API, 7 ноября 2026</p>
+</div></div><script>
+const tl=gsap.timeline({paused:true});
+// Reused measured arrival from registry chat-message, shortened to one reply.
+tl.fromTo('.cm-pop',{scale:0.75,opacity:0.6},{scale:1,opacity:1,duration:0.12,ease:'power2.out'},2);
+tl.set({}, {}, 19.07);
+window.__timelines['character']=tl;
+</script></template>
