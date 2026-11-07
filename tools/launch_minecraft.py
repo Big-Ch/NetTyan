@@ -15,7 +15,9 @@ identifier[6]=(identifier[6]&0x0f)|0x30
 identifier[8]=(identifier[8]&0x3f)|0x80
 options={'username':name,'uuid':str(uuid.UUID(bytes=bytes(identifier))),'token':'0',
          'executablePath':report['java'],'gameDirectory':str(folder),
-         'jvmArguments':['-Xmx2G','-Xms512M'],'customResolution':True,
+         # UnionClef formats then parses distances using Double.parseDouble.
+         # Decimal commas otherwise break state reads with multiple players/beds.
+         'jvmArguments':['-Xmx2G','-Xms512M','-Duser.language=en','-Duser.country=US'],'customResolution':True,
          'resolutionWidth':'1280','resolutionHeight':'720','launcherName':'PersonaLab-Kadr'}
 if args.world:
     world=(folder/'saves'/args.world).resolve()

@@ -58,6 +58,9 @@ class GameChat:
                         self.session.stop(self.session.identity or identity)
                         self.stop();return
                     if time.monotonic()-last<5:continue
+                    self.session.record('game_chat_incoming',{'player':nickname,'message':message})
+                    audio=None
+                    played=False
                     if re.search(r'забудь меня|удали (?:мои )?(?:заметки|историю)',message,re.I):
                         answer=self.session.runtime.forget(identity)
                     else:
@@ -70,10 +73,11 @@ class GameChat:
                             from kadr.voice import synthesize,play_local
                             audio=synthesize(answer,self.session.runtime)
                             if self.cancel.is_set():return
-                            play_local(audio)
+                            played=play_local(audio)
                     if self.cancel.is_set():return
                     receipt=bridge.say(answer)
-                    self.session.record('game_chat_reply',{'player':nickname,'answer':answer,'receipt':receipt})
+                    self.session.record('game_chat_reply',{'player':nickname,'answer':answer,'receipt':receipt,
+                                                         'audio':audio,'playback_started':played})
                     last=time.monotonic()
             except Exception as error:
                 self.phase='Игровой чат: '+type(error).__name__
