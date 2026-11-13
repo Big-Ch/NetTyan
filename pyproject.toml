@@ -55,6 +55,10 @@ stt = [
 gpu = [
     "onnxruntime-gpu~=1.23.2"
 ]
+course = [
+    "minecraft-launcher-lib==8.0",
+    "piper-tts==1.8.0",
+]
 [project.scripts]
 nettyan = "main:main"
 

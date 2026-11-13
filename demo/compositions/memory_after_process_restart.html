@@ -1,0 +1,20 @@
+<template><style>
+@font-face{font-family:KadrArial;src:url('assets/Arial.ttf')}
+*{box-sizing:border-box}#root{position:absolute;inset:0;background:#f7faf7;color:#14251b;font-family:KadrArial,sans-serif}
+.content{position:absolute;left:192px;top:150px;width:1536px}
+h1{font-size:68px;line-height:1.12;letter-spacing:-2px;margin:0 0 38px}
+.question{font-size:36px;line-height:1.3;margin:0 0 35px;color:#42584a;max-width:1470px}
+.cm-pop{transform-origin:left bottom;background:#ddfb62;padding:32px 42px;border-radius:22px}
+.reply{font-size:47px;line-height:1.28;margin:0}
+.receipt{font-size:29px;line-height:1.3;margin:25px 0 0;color:#42584a}
+</style><div data-hf-id="hf-6ivr" id="root" data-composition-id="memory_after_process_restart" data-width="1920" data-height="1080">
+<div data-hf-id="hf-s8lu" class="content" data-hold><h1 data-hf-id="hf-iok2">Новый процесс. Память осталась.</h1><p data-hf-id="hf-wqlx" class="question">Мы продолжаем после перезапуска. Что я ремонтировал и какую деталь хотел проверить завтра?</p>
+<div data-hf-id="hf-exb0" id="reply" class="clip" data-start="2" data-duration="6.0" data-track-index="2"><div data-hf-id="hf-ctrm" class="cm-pop"><p data-hf-id="hf-atcy" class="reply">Ты ремонтировал зелёный велосипед и хотел проверить задний тормоз.</p></div></div>
+<p data-hf-id="hf-8pcj" id="receipt" class="clip receipt" data-start="2" data-duration="6.0" data-track-index="3">Проверка выполнена отдельным Python-процессом</p>
+</div></div><script>
+const tl=gsap.timeline({paused:true});
+// Reused measured arrival from registry chat-message, shortened to one reply.
+tl.fromTo('.cm-pop',{scale:0.75,opacity:0.6},{scale:1,opacity:1,duration:0.12,ease:'power2.out'},2);
+tl.set({}, {}, 8.0);
+window.__timelines['memory_after_process_restart']=tl;
+</script></template>

@@ -6,9 +6,11 @@ from datetime import datetime
 from typing import Union
 
 from alembic.config import Config
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
+from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 
 from data_flow.db.dao.mind_variable import MindVariableDAO
 from data_flow.db.dao.user import UserDAO
@@ -30,8 +32,11 @@ _pg_password = os.environ.get("POSTGRES_PASSWORD", "password")
 _pg_host = os.environ.get("POSTGRES_HOST", "127.0.0.1")
 _pg_port = os.environ.get("POSTGRES_PORT", "5432")
 _pg_db = os.environ.get("POSTGRES_DB", "nettyan")
-DB_URI = f'postgresql+psycopg2://{_pg_user}:{_pg_password}@{_pg_host}:{_pg_port}/{_pg_db}'
-_DB_URI_SAFE = f'postgresql+psycopg2://{_pg_user}:***@{_pg_host}:{_pg_port}/{_pg_db}'
+DB_URI = os.environ.get("DATABASE_URL") or URL.create(
+    "postgresql+psycopg2", username=_pg_user, password=_pg_password,
+    host=_pg_host, port=int(_pg_port), database=_pg_db,
+)
+_DB_URI_SAFE = make_url(DB_URI).render_as_string(hide_password=True)
 
 print("[DB] Loading Main Database from " + _DB_URI_SAFE + "...")
 
@@ -41,12 +46,28 @@ class StreamerDatabase:
         t_start = time.time()
 
         # Create engine first (shared for migrations and queries)
-        self.engine = create_engine(DB_URI)
+        engine_options = {"poolclass": NullPool} if make_url(DB_URI).get_backend_name() == "sqlite" else {}
+        self.engine = create_engine(DB_URI, **engine_options)
+        if self.engine.dialect.name == "sqlite":
+            @event.listens_for(self.engine, "connect")
+            def configure_sqlite(connection, _):
+                connection.execute("PRAGMA foreign_keys=ON")
+                connection.execute("PRAGMA busy_timeout=5000")
+                connection.create_function("greatest", -1, max)
+                connection.create_function("least", -1, min)
+
         self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False)
         print(f"[DB ⏱️ {time.time()-t_start:.2f}s] Engine created")
 
         # Run migrations only if needed (check current version first)
-        if run_migrations:
+        if self.engine.dialect.name == "sqlite":
+            from data_flow.db.models import Base, MindVariable
+            Base.metadata.create_all(self.engine)
+            with self.session_factory() as session:
+                if session.get(MindVariable, 1) is None:
+                    session.add(MindVariable(mind_id=1, mind_name="Kadr", mood=0.0))
+                    session.commit()
+        elif run_migrations:
             self._run_migrations()
 
         # Warmup — verify connection works
@@ -56,7 +77,7 @@ class StreamerDatabase:
             if mood is None:
                 raise Exception("MOOD IS NONE")
         except Exception as err:
-            print(f"[DB INIT ERR] Connection failed: {DB_URI} — {err}")
+            print(f"[DB INIT ERR] Connection failed: {_DB_URI_SAFE} — {type(err).__name__}")
             print("[DB] Attempting re-init...")
             print(f"[DB WARMUP TRY 2] MOOD = {self.get_mood()}")
 
@@ -71,7 +92,8 @@ class StreamerDatabase:
             from data_schema.structure_templates import REPO_ROOT_PATH
 
             alembic_cfg = Config(os.path.join(REPO_ROOT_PATH, "alembic.ini"))
-            alembic_cfg.set_main_option("sqlalchemy.url", DB_URI)
+            migration_uri = make_url(DB_URI).render_as_string(hide_password=False)
+            alembic_cfg.set_main_option("sqlalchemy.url", migration_uri.replace("%", "%%"))
 
             # Quick check: is DB already at head?
             script = ScriptDirectory.from_config(alembic_cfg)

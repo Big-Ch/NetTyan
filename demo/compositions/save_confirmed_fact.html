@@ -1,0 +1,20 @@
+<template><style>
+@font-face{font-family:KadrArial;src:url('assets/Arial.ttf')}
+*{box-sizing:border-box}#root{position:absolute;inset:0;background:#f7faf7;color:#14251b;font-family:KadrArial,sans-serif}
+.content{position:absolute;left:192px;top:150px;width:1536px}
+h1{font-size:68px;line-height:1.12;letter-spacing:-2px;margin:0 0 38px}
+.question{font-size:36px;line-height:1.3;margin:0 0 35px;color:#42584a;max-width:1470px}
+.cm-pop{transform-origin:left bottom;background:#ddfb62;padding:32px 42px;border-radius:22px}
+.reply{font-size:47px;line-height:1.28;margin:0}
+.receipt{font-size:29px;line-height:1.3;margin:25px 0 0;color:#42584a}
+</style><div data-hf-id="hf-7lnb" id="root" data-composition-id="save_confirmed_fact" data-width="1920" data-height="1080">
+<div data-hf-id="hf-s8lu" class="content" data-hold><h1 data-hf-id="hf-406r">Заметка только с разрешения</h1><p data-hf-id="hf-m7pc" class="question">Запомни с моего разрешения: я ремонтировал зелёный велосипед, завтра проверю задний тормоз. Сохрани это в заметку.</p>
+<div data-hf-id="hf-yomq" id="reply" class="clip" data-start="2" data-duration="7.515" data-track-index="2"><div data-hf-id="hf-ctrm" class="cm-pop"><p data-hf-id="hf-yyc5" class="reply">Сохранил: ты ремонтировал зелёный велосипед и завтра собираешься проверить задний тормоз.</p></div></div>
+<p data-hf-id="hf-pmdo" id="receipt" class="clip receipt" data-start="2" data-duration="7.515" data-track-index="3">save_note: saved = true</p>
+</div></div><script>
+const tl=gsap.timeline({paused:true});
+// Reused measured arrival from registry chat-message, shortened to one reply.
+tl.fromTo('.cm-pop',{scale:0.75,opacity:0.6},{scale:1,opacity:1,duration:0.12,ease:'power2.out'},2);
+tl.set({}, {}, 9.515);
+window.__timelines['save_confirmed_fact']=tl;
+</script></template>

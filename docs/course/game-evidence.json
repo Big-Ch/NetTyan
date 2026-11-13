@@ -1,0 +1,42 @@
+{
+  "scope": "Real disposable local survival world; scripted operator objective, no independent audience",
+  "duration": 66.67503854875284,
+  "objective": "Ты в своём тестовом мире выживания. Добудь дерево и сделай один верстак. Выполни игровую задачу через obtain_item crafting_table 1. Не утверждай успех до появления верстака в инвентаре.",
+  "before": {
+    "xyz": [
+      -1304.7,
+      73.0,
+      -15.5
+    ],
+    "inventory": {}
+  },
+  "after": {
+    "xyz": [
+      -1303.7,
+      68.0,
+      -16.5
+    ],
+    "inventory": {
+      "oak_sapling": 1,
+      "stick": 1,
+      "leaf_litter": 4,
+      "crafting_table": 1,
+      "birch_log": 1
+    }
+  },
+  "phase": "Задача подтверждена игровыми данными.",
+  "frames": 112,
+  "speech": [
+    {
+      "start": 10.236,
+      "duration": 7.9412244897959186,
+      "text": "Начал: поручил AltoClef добыть дерево и скрафтить один верстак. Пока он не появился в инвентаре, задачу выполненной не считаю."
+    },
+    {
+      "start": 59.812,
+      "duration": 5.863038548752835,
+      "text": "Готово: верстак появился в инвентаре — один. Добыли берёзовое бревно и сделали дело."
+    }
+  ],
+  "method": "Actual snapshots on measured timestamps; emitted local TTS mixed at readiness times. Last frame held for final speech. Not a microphone recording."
+}
